@@ -1,5 +1,5 @@
 #!/usr/bin/env /usr/bin/python3
-
+import sys
 import argparse
 import requests
 
@@ -26,7 +26,7 @@ def give_back(status: int, filled_in_status_str: str):
     :param filled_in_status_str: Status string to print out before exiting
     """
     print(filled_in_status_str)
-    raise SystemExit(status)
+    sys.exit((status))
 
 
 def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int):
@@ -113,4 +113,8 @@ parser.add_argument('-c', '--critical', dest='critical_percent', type=int, defau
 
 args = parser.parse_args()
 
-check_sb(**vars(args))
+if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
+else:
+    check_sb(**vars(args))
