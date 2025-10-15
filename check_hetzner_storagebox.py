@@ -88,7 +88,7 @@ def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int)
             monitoring_status = WARNING
             status = "WARNING"
 
-        message = f"Storagebox {name}: {used_gb}GB of {quota_gb}GB used"
+        message = f"Storagebox {name}: {round(used_gb / 1024, 2)}TB of {round(quota_gb / 1024, 2)}TB used"
         status_long = status_str.format(
             status=status, text=message, label=name, value=used, unit="B", warn=warning_mb, crit=critical_mb, min=0, max=quota
         )
