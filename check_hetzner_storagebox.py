@@ -18,6 +18,7 @@ status_str = "{status} - {text} | {label}={value}{unit};{warn};{crit};{min};{max
 # String to give back in case of an error, performance data intentionally without information
 status_str_no_data = "{status} - {text} | UNKNOWN=0B;0;0;0;0"
 
+
 def give_back(status: int, filled_in_status_str: str):
     """
     Method to give back information. Prints out message and exits with given exit Code
@@ -27,6 +28,7 @@ def give_back(status: int, filled_in_status_str: str):
     print(filled_in_status_str)
     raise SystemExit(status)
 
+
 def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int):
     """
     Method that accesses the Hetzner API, reads out StorageBox usage and quota and calls the give_back() method to indicate the results.
@@ -35,7 +37,7 @@ def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int)
     :param warning_percent: Percentage (0-100), when usage surpasses this value the status "WARNING" is issued
     :param critical_percent: Percentage (0-100), when usage surpasses this value the status "CRITICAL" is issued
     """
-    
+
     api_header = {
         "Authorization": f"Bearer {api_key}"
     }
@@ -74,7 +76,7 @@ def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int)
 
         if not name:
             name = next(box['server'] for box in data if box['id'] == box_id_to_find)
-        
+
         percentage: int = round(used / quota * 100, 0)
         monitoring_status: int = OK
         status: str = "OK"
@@ -101,9 +103,10 @@ def check_sb(api_key: str, id: int, warning_percent: int, critical_percent: int)
     else:
         give_back(UNKNOWN, status_str_no_data.format(status="UNKNOWN", text=f"API HTTP STATUS {r.status_code}"))
 
+
 parser = argparse.ArgumentParser(
     description='Nagios/Icinga Plugin to measure disk usage of Hetzner Storagebox via API.')
-parser.add_argument('-api', '--apikey', dest='api_key', help='Hetzner API token',default="TopSecretAPIKey")
+parser.add_argument('-api', '--apikey', dest='api_key', help='Hetzner API token', default="TopSecretAPIKey")
 parser.add_argument('-id', '--identifier', dest='id', type=int, help='ID of Hetzner Storagebox', default=1337)
 parser.add_argument('-w', '--warning', dest='warning_percent', type=int, default=90, help='Percentage threshold the status "WARNING"')
 parser.add_argument('-c', '--critical', dest='critical_percent', type=int, default=95, help='Percentage threshold the status "CRITICAL"')
